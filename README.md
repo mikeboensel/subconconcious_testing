@@ -6,6 +6,9 @@
     - [papers](https://arxiv.org/pdf/2507.16784)
     - taking notes.
 
+# Worked well
+- `e2b_cli` example
+
 # Errors encountered
 ## The Quickstart guide is outdated and doesn't work.
     - Seems to be using an older library version `subconscious-python` vs `subconscious-sdk`.
