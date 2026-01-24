@@ -16,6 +16,18 @@
 When running: https://github.com/subconscious-systems/subconscious/tree/main/examples/search_agent_cli
 <img src="imgs/warmup_failure.png" alt="Warming up" width="500" height="auto">
 
+## Main Docs page example 
+### Uses a bad string for the engine: `tim-gpt`
+- <img src="imgs/main_page_code.png" alt="TIM-GPT engine" width="500" height="auto">
+- <img src="imgs/main_page_code_error.png" alt="TIM-GPT engine" width="500" height="auto">
+```python
+Literal["tim-small-preview", "tim-large", "timini"]
+(type) Engine = Literal['tim-small-preview', 'tim-large', 'timini']
+```
+### Fails consistently
+- `Run(run_id='114cc346-d0cd-4c32-bde2-2d52ac5796e8', status='failed', result=RunResult(answer='', reasoning=''), usage=Usage(models=[], platform_tools=[]))`
+- 
+
 # Open Questions
 - Thought that the TIMRUN runtime was private? (https://github.com/subconscious-systems/subconscious)
 - I see the tool defs match the OpenAI's tool definition schema and add on to it, but I wonder if it wouldn't be beneficial to also add a schema for the output to allow for more structured/interpretable outputs?
