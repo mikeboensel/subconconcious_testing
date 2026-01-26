@@ -134,6 +134,8 @@ The top 10 most-commented Hacker News posts of the last week (as per hntoplinks.
 - Ability to search by a specific run_id
 - Displaying run_id
 - Displaying/editing of name/comments mentioned above.
+- The hover over the reasoning traces gets cut off. You can find a good search term and then switch to the JSON view and CTRL+F, but it's not ideal.
+    - <img src="imgs/tree_view_hover_cutoff.jpeg" alt="Reasoning trace cutoff" width="500" height="auto">
 
 ## Tool assessment!
 - Tooling is critical. We get some description of what we need when a request "soft fails" (doesn't fail outright, but does not return a sensible result/complains about insufficient tooling)
