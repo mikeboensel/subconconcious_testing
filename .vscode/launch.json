@@ -11,6 +11,20 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false
+        },
+        {
+            "name": "FastAPI: Requests Tool Server",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "tools.requests_tool:app",
+                "--reload",
+                "--port",
+                "8080"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
         }
     ]
 }
