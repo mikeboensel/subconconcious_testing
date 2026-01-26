@@ -1,50 +1,53 @@
+import os
+from dotenv import load_dotenv
 from subconscious import Subconscious
 from time import sleep
-client = Subconscious(
-    api_key="sk-9bba1e741450302349165a78b005082cd232e17f10ae506398def9604e2589f2"
-)
+from tools.requests_registration import get_requests_tool
+from models import HN_Sentiment_Analysis
 
-from pydantic import BaseModel
+# Load environment variables from .env file
+load_dotenv()
 
+# Get API key from environment
+api_key = os.getenv("SUBCONSCIOUS_API_KEY")
+if not api_key:
+    raise ValueError(
+        "SUBCONSCIOUS_API_KEY not found in environment variables. "
+        "Please set it in .env file."
+    )
 
-class HN_Sentiment(BaseModel):
-    '''Sentiment score + examples, can be applied to either a post or a category.'''
-    average_sentiment: float
-    lower_bound: float
-    upper_bound: float
-    general_description: str # Ex: Tone varies; comments often critical or concerned, with occasional optimism when solutions are discussed.
-    positive_examples: list[str]
-    negative_examples: list[str]
-class HN_Post(BaseModel):
-    '''A post on Hacker News.'''
-    summary: str
-    link: str
-    sentiment: HN_Sentiment
+client = Subconscious(api_key=api_key)
 
-class HN_Category(BaseModel):
-    '''A category of posts on Hacker News, contains posts (grouped by a model determined topic)'''
-    name: str
-    topics: list[str]
-    sentiment: HN_Sentiment
-    posts: list[HN_Post]
-
-class HN_Sentiment_Analysis(BaseModel):
-    '''A analysis of sentiments, broadly (across categories) and specifically (for individual posts).'''
-    categories: list[HN_Category]
+# Note: This will change, should point to a stood up version of the requests_tool_impl.py
+NGROK_URL = "https://2489289f6092.ngrok-free.app/request"
 
 
-hn_instructions_simpler = """
-Find the top 10 posts (measured by number of comments) on Hacker News (https://news.ycombinator.com/) for the last week.
-Provide the title of the post, a link to it, the # of upvotes, the # of comments, a sentimental analysis of the comments(1-5), provide a positive and negative example of a comment.
-"""
+#####
+# Struggled to get things to work consistently + return what was desired.
+# Prompts
+#####
 
+# Just trying to get it to call my requests tool.
+simple_tool_check = """
+Make a GET request to https://httpbin.org/get.
+Return the status code, headers, and body."""
+
+# Original desired prompt. I added some constraints.
 hn_instructions = """Provide a breakdown of the topics currently (within the last week) being discussed on Hacker News (https://news.ycombinator.com/). 
+Limit yourself to 20 posts total.
 I want 2 breakdowns:
-1. Group by broad categories and the sentiment of the comments of the grouped posts.
+1. Group by 3 broad categories and the sentiment of the comments of the grouped posts.
 2  Provide a heirarchical breakdown of each broad category into posts that were incorporated into it. 
 Include the top 5 posts as measured by number of comments. 
 The Post entries should have a summary (1-2 sentences), a link to it, and a sentiment score (1-5)."""
 
+# Simplified when the above prompt failed
+hn_instructions_simpler = """
+Find the top 10 posts (measured by number of comments) on Hacker News (https://news.ycombinator.com/) for the last week.
+Provide the title of the post, a link to it, the # of upvotes, the # of comments, a sentimental analysis of the comments(1-5), provide a positive and negative example of a comment."""
+
+
+# Having fun. Let's task this agent with figuring out a good project.
 interview_project = """
 I am currently interviewing for a position as a software engineer at a subconscious.dev. As part of this I was asked to create a project that exercises the platform.
 You can find docs at: https://docs.subconscious.dev/
@@ -56,11 +59,11 @@ a few hours (manual labor) to spend on the project.
 run = client.run(
     engine="tim-gpt",
     input={
-        "instructions": hn_instructions,
+        "instructions": simple_tool_check,
         "tools": [
             {"type": "platform", "id": "parallel_search"},
-            {"type": "platform", "id": "exa_crawl"},
             {"type": "platform", "id": "parallel_extract"},
+            get_requests_tool(NGROK_URL),
         ],
         "answerFormat": HN_Sentiment_Analysis,
     },
