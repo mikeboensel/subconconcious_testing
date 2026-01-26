@@ -56,10 +56,18 @@ What I can do immediately (once you allow one of the options below)
     the top-10 story IDs you care about, or
     an export of Algolia HN Search results for the last 7 days …and I’ll do the sentiment and comment examples from that.
 ```
-- TODO: So I guess I should expose a simple `requests` or `curl` style tool?
+- So I should expose a simple `requests` or `curl` style tool (see issue below)
+
+## Custom tool caused the run to fail
+- Seems properly defined/registered, but definitely causes the run to fail (adding/removing it w/o changing anything else causes it to break/succeed)
+- `tim-gpt` seemingly did nothing (example run ID: Run ID: 394d511d-a9ae-4f34-80d8-583d6a8cd0a4):
+    - <img src="imgs/tool_failure_tim_gpt.jpeg" alt="TIM-GPT failure" width="500" height="auto">
+- `tim-gpt-heavy` threw this error: 
+    - <img src="imgs/tool_failure_tim_gpt_heavy.jpeg" alt="TIM-GPT failure" width="500" height="auto">
 
 ## Doesn't seem to be taking the Output Model into account
-I had a pretty elaborate output model defined, but it doesn't show it in the code from the Dashboard. Not sure if it does or doesn't see it (or if this is just a display bug)
+I had a pretty elaborate output model defined, but it doesn't show it in the code from the Dashboard. 
+- Not sure if it does or doesn't see it (or if this is just a display bug)
 ```python
 import Subconscious from '@subconscious/sdk';
 
@@ -88,12 +96,7 @@ The Post entries should have a summary (1-2 sentences), a link to it, and a sent
 console.log(run.result);
 ```
 
-## Engines documented in the docs vs what the SDK actually supports
-- `type Engine = 'tim-small-preview' | 'tim-large' | 'timini' | (string & {});`
-- `https://docs.subconscious.dev/engines#available-engines`
 
-## The Quickstart guide is outdated and doesn't work.
-    - Seems to be using an older library version `subconscious-python` vs `subconscious-sdk`.
 ## The `examples` have a lot of varying degrees of completeness/polish. 
 - Would be nice to have a docker compose to setup examples like this: https://github.com/subconscious-systems/subconscious/blob/main/examples/browser_use/agent.py
 
@@ -101,25 +104,17 @@ console.log(run.result);
 When running: https://github.com/subconscious-systems/subconscious/tree/main/examples/search_agent_cli
 <img src="imgs/warmup_failure.png" alt="Warming up" width="500" height="auto">
 
-## Main Docs page example 
-### Uses a bad string for the engine: `tim-gpt`
-- <img src="imgs/main_page_code.png" alt="TIM-GPT engine" width="500" height="auto">
-- <img src="imgs/main_page_code_error.png" alt="TIM-GPT engine" width="500" height="auto">
-```python
-Literal["tim-small-preview", "tim-large", "timini"]
-(type) Engine = Literal['tim-small-preview', 'tim-large', 'timini']
-```
-### Fails consistently
-- `Run(run_id='114cc346-d0cd-4c32-bde2-2d52ac5796e8', status='failed', result=RunResult(answer='', reasoning=''), usage=Usage(models=[], platform_tools=[]))`
-- 
-
 # Nitpicky stuff
-- [CURL example for Streaming](https://docs.subconscious.dev/core-concepts/streaming#basic-usage)
-    - I'm guessing you get back a `runId` and then you can poll for the result? Should be explicit about usage example. 
+## Streaming example for curl
+- [Docs example](https://docs.subconscious.dev/core-concepts/streaming#basic-usage)
+    - I'm guessing you get back a `run_id` and then you can poll for the result? Should be explicit about usage example. 
 - Write the engine specific costs in as constants, provide cost values directly vs making the user look it up in the docs. [here](https://docs.subconscious.dev/guides/response-handling#tracking-costs)
+
+## Naming
 - `Thread` implies parallelism to developers, just a heads up.
     - Also, just want to be sure, this is a single-agent system, right? I have some trouble understanding how to read images like: https://www.subconscious.dev/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fs764co7b%2Fproduction%2Fd53e36ef3fea76b12405afe82158893794b553dc-2046x1116.jpg%3Fq%3D100&w=3840&q=75
 
+## Agent outsourced the work vs returning the answer
 - Run ID: 9c4ad18e-50f7-41fc-a57b-0b267f43acb6
     - Lol. It outsourced it:
 ```bash
@@ -128,7 +123,12 @@ Final Answer:
 The top 10 most-commented Hacker News posts of the last week (as per hntoplinks.com/week) can be found at: http://www.hntoplinks.com/week
 ```
 
-# Improvement requests
+## NGROK or other tunnel
+- Lots of examples use localhost, which might lead to confusion (Does the library hit your API and then allow for the API to request the library to hit internal resources?)
+- Its answered [here](https://docs.subconscious.dev/core-concepts/tools#registering-with-subconscious), but IMO should be made more clear in the example code:
+    - [Example code](https://github.com/subconscious-systems/subconscious/blob/main/examples/browser_use/agent.py)
+
+# Suggested Improvements
 ## API 
 - Would be really nice to be able to name runs + add comments
     - I found myself experimenting a lot (since a run can go anywhere from seconds -> 10s of minutes)
@@ -174,14 +174,8 @@ tools = [
 ]
 ```
 
-- Also, can Subconcious's API really hit localhost?
-    - Answered [here](https://docs.subconscious.dev/core-concepts/tools#registering-with-subconscious)
-        - IMO should be made more clear in the example code (which has a lot of localhost usage)
-    - Example: https://github.com/subconscious-systems/subconscious/blob/main/examples/browser_use/agent.py
-    - I'm assuming you need it to be a publically accessible endpoint (or local going thru ngrok)? 
-        - Or does the library allow for hitting non-public endpoints?
 
-# General notes
+# General notes (from reading blogs/docs)
 -  We believe this is an early phase in the cycle of AI agents, and soon agents will live closer to the metal at the model and runtime layer. The underlying large agent model will generate its next steps on the fly, use external tools, and follow its instructions to get the job done without a rigidly defined software workflow.
     - `Model Agents` vs `Framework Agents`
         - Whether the model guides itself and creates its own workflow OR is orchestrated broadly by software (control structures).
