@@ -11,14 +11,48 @@
 - `e2b_cli` example
 
 # Errors encountered
+## Output was the reasoning trace, not the answer
+- Maybe this is right and I'm just not understanding the output, but it looks off to me
+- Run ID: 3c13e3bd-ca5d-4021-821c-bedfe824dc31
+
+## Generic `terminated` error, no details provided
+- Run ID: 8bfccd31-974c-4c3b-a350-0922b7b8dece
+
 ## API doesn't return answer, but the Run summary has one
 - Run ID: f5b543c0-bce8-4447-8089-629dc26c764c
-- Seems to be happening pretty often.
+- Seems to be happening pretty often. (maybe `tim-gpt-heavy` is more prone to this?)
 - Simple enough workaround: `run = client.get(run_id="54badb30-088c-469d-9b54-b381c46859db")`
 
 ## Repeated identical error detected 10 times (sig=error); stopping stream early.
 - Note: This was a `tim-gpt-heavy` engine usage. Ran into this twice.
 - Run ID: 207f8515-c4d3-48b5-8e50-7a7b95fa8c03
+- <img src="imgs/gpt-heavy-repetition.jpeg" alt="TIM-GPT-HEAVY error" width="500" height="auto">
+
+### Attempting to resolve
+- I began removing tools (had `exa_crawl`, `parallel_extract`, `parallel_search`), to see if this would resolve the issue.
+- "Working" combos: 
+    - `parallel_search` + `parallel_extract` (Run ID: 16054163-5029-4dd2-8605-913f7f7aa2ce) 
+    - `parallel_search`(Run ID: a4ed1c00-ea3d-45f6-b5e6-09035f24e475) by itself.
+    - Really a soft failure, now it has insufficient tooling:
+```
+What I can do immediately (once you allow one of the options below)
+
+    If you enable direct HTTP fetching (or give me the 10 story IDs), I will return a table with:
+
+    Title
+    Link (HN item URL)
+    upvotes (points)
+    comments
+    Comment sentiment score (1–5)
+    One positive example comment (quoted)
+    One negative example comment (quoted)
+
+    If you can’t enable fetching, you can paste either:
+
+    the top-10 story IDs you care about, or
+    an export of Algolia HN Search results for the last 7 days …and I’ll do the sentiment and comment examples from that.
+```
+- TODO: So I guess I should expose a simple `requests` or `curl` style tool?
 
 ## Doesn't seem to be taking the Output Model into account
 I had a pretty elaborate output model defined, but it doesn't show it in the code from the Dashboard. Not sure if it does or doesn't see it (or if this is just a display bug)
@@ -82,8 +116,33 @@ Literal["tim-small-preview", "tim-large", "timini"]
 - `Thread` implies parallelism to developers, just a heads up.
     - Also, just want to be sure, this is a single-agent system, right? I have some trouble understanding how to read images like: https://www.subconscious.dev/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fs764co7b%2Fproduction%2Fd53e36ef3fea76b12405afe82158893794b553dc-2046x1116.jpg%3Fq%3D100&w=3840&q=75
 
+- Run ID: 9c4ad18e-50f7-41fc-a57b-0b267f43acb6
+    - Lol. It outsourced it:
+```bash
+Final Answer:
+
+The top 10 most-commented Hacker News posts of the last week (as per hntoplinks.com/week) can be found at: http://www.hntoplinks.com/week
+```
+
+# Improvement requests
+## API 
+- Would be really nice to be able to name runs + add comments
+    - I found myself experimenting a lot (since a run can go anywhere from seconds -> 10s of minutes)
+    - Would make it easier to make sense of later
+
+## Agent Runs Dashboard
+- Ability to search by a specific run_id
+- Displaying run_id
+- Displaying/editing of name/comments mentioned above.
+
+## Tool assessment!
+- Tooling is critical. We get some description of what we need when a request "soft fails" (doesn't fail outright, but does not return a sensible result/complains about insufficient tooling)
+- However, we have to resolve this iteratively.
+    - Hit first missing tool, add it, and then try again. Hit next missing tool, add it, and then try again. Etc.
+
+
 # Open Questions
-- Thought that the TIMRUN runtime was private? (https://github.com/subconscious-systems/subconscious)
+
 - I see the tool defs match the OpenAI's tool definition schema and add on to it, but I wonder if it wouldn't be beneficial to also add a schema for the output to allow for more structured/interpretable outputs?
 Cursor's comparison of OpenAI's tool definition schema and Subconscious's tool definition schema:
 ```json
