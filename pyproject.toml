@@ -8,5 +8,5 @@ dependencies = [
     "fastapi>=0.104.0",
     "uvicorn[standard]>=0.24.0",
     "python-dotenv>=1.0.0",
-    "subconscious-sdk>=0.1.6",
+    "subconscious-sdk>=0.2.0",
 ]

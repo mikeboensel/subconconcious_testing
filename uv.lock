@@ -490,20 +490,20 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.104.0" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
-    { name = "subconscious-sdk", specifier = ">=0.1.6" },
+    { name = "subconscious-sdk", specifier = ">=0.2.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.24.0" },
 ]
 
 [[package]]
 name = "subconscious-sdk"
-version = "0.1.6"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/d3/eba792be7e86ba17ddcb69143f960777a7d3db2981fc0debf331a5417c1a/subconscious_sdk-0.1.6.tar.gz", hash = "sha256:9dadd50c6349e9759032e2f58cf1aac3713925107d0dd59580d143b5671fdefd", size = 16478, upload-time = "2026-01-13T19:20:54.375Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2e/52/2f94e71bfc1550a0e70fa23fb3e11ab6890b87c79d78e79e8a5a1e59d149/subconscious_sdk-0.2.0.tar.gz", hash = "sha256:925a5112faee316317f4cb756696f2db014c0cee1dac8b33026bd5650a354bc9", size = 16483, upload-time = "2026-01-26T04:09:28.52Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/27/a277afa571412b9126a34c5171e3688fe436de7a8c1c224ed853a7a224af/subconscious_sdk-0.1.6-py3-none-any.whl", hash = "sha256:365803f40e31ed049f00d47f91a27b79f0bb69dd93b200b4a961fd6772472a87", size = 15251, upload-time = "2026-01-13T19:20:53.026Z" },
+    { url = "https://files.pythonhosted.org/packages/65/7a/1115364f13395ad3cad61bc564e461b244a829933330d7fdaaf26cac9a59/subconscious_sdk-0.2.0-py3-none-any.whl", hash = "sha256:9cf1002fd22b84b76ac89a653f503e98f9f11bdcaa03b03294e8768a5f0f3932", size = 15244, upload-time = "2026-01-26T04:09:26.927Z" },
 ]
 
 [[package]]
