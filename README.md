@@ -11,6 +11,10 @@
 - `e2b_cli` example
 
 # Errors encountered
+## Playground didn't work for me
+- Tried logging in/out
+- <img src="imgs/playground_error.jpeg" alt="Playground error" width="500" height="auto">
+
 ## Output was the reasoning trace, not the answer
 - Maybe this is right and I'm just not understanding the output, but it looks off to me
 - Run ID: 3c13e3bd-ca5d-4021-821c-bedfe824dc31
