@@ -32,6 +32,12 @@ class HN_Sentiment_Analysis(BaseModel):
     '''A analysis of sentiments, broadly (across categories) and specifically (for individual posts).'''
     categories: list[HN_Category]
 
+
+hn_instructions_simpler = """
+Find the top 10 posts (measured by number of comments) on Hacker News (https://news.ycombinator.com/) for the last week.
+Provide the title of the post, a link to it, the # of upvotes, the # of comments, a sentimental analysis of the comments(1-5), provide a positive and negative example of a comment.
+"""
+
 hn_instructions = """Provide a breakdown of the topics currently (within the last week) being discussed on Hacker News (https://news.ycombinator.com/). 
 I want 2 breakdowns:
 1. Group by broad categories and the sentiment of the comments of the grouped posts.
