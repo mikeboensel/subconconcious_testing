@@ -28,7 +28,7 @@
 - Simple enough workaround: `run = client.get(run_id="54badb30-088c-469d-9b54-b381c46859db")`
 
 ## Repeated identical error detected 10 times (sig=error); stopping stream early.
-- Note: This was a `tim-gpt-heavy` engine usage. Ran into this twice.
+- Note: This was a `tim-gpt-heavy` engine usage. Ran into this multiple times.
 - Run ID: 207f8515-c4d3-48b5-8e50-7a7b95fa8c03
 - <img src="imgs/gpt-heavy-repetition.jpeg" alt="TIM-GPT-HEAVY error" width="500" height="auto">
 
