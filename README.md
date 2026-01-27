@@ -7,8 +7,11 @@
     - [Published Model](https://huggingface.co/papers/2507.16784)
     - taking notes.
 
-# Worked well
-- `e2b_cli` example
+# Project
+- I built a sentiment analysis tool for [Hacker News](./src/hackernews/hackernews_sentiment_analysis.py). The original intent was to group recent posts by category, get a sense of the sentiment for the category, then for the individual posts that compose it. Ran into a number of issues that I've documented below. 
+
+# Examples that worked well
+- `e2b_cli` 
 
 # Errors encountered
 ## Playground didn't work for me
