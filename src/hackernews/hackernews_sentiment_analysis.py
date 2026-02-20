@@ -16,10 +16,13 @@ if not api_key:
         "Please set it in .env file."
     )
 
-client = Subconscious(api_key=api_key)
+
+client = Subconscious(api_key="sk-4c8b4065efeef70367209eb7c8d97064c40777068f23cb4b230c4d526b1ba8a1", 
+    base_url="http://localhost:8000/v1",
+)
 
 # Note: This will change, should point to a stood up version of the requests_tool_impl.py
-NGROK_URL = "https://2489289f6092.ngrok-free.app/request"
+NGROK_URL = "https://b6b0-209-160-132-134.ngrok-free.app"
 
 
 #####
@@ -59,19 +62,36 @@ a few hours (manual labor) to spend on the project.
 run = client.run(
     engine="tim-gpt",
     input={
-        "instructions": simple_tool_check,
+        "instructions": "I need to understand Tailwind CSS and how to make a blinking banner with it.",
         "tools": [
+            {"type": "mcp", "server": "https://mcp.context7.com/mcp", "name": "context7", "auth": {"type": "api_key", "token": "ctx7sk-53b3fe12-159f-4180-87fb-95e91ac87289"}},
             {"type": "platform", "id": "parallel_search"},
-            {"type": "platform", "id": "parallel_extract"},
+            # {"type": "platform", "id": "parallel_extract"},
             get_requests_tool(NGROK_URL),
         ],
-        "answerFormat": HN_Sentiment_Analysis,
+        # "answerFormat": HN_Sentiment_Analysis,
     },
-    options={"await_completion": True},
+    options={"await_completion": False},
 )
+
+
+# Context7
+## API Key: ctx7sk-53b3fe12-159f-4180-87fb-95e91ac87289
+## Endpoint: https://mcp.context7.com/mcp
+
+# {
+#   type: "mcp";
+#   server: string; // MCP server URL
+#   name?: string; // Specific tool (omit to use all tools from server)
+#   auth?: {
+#     type: "bearer" | "api_key";
+#     token?: string;
+#     header?: string; // Header name for api_key auth
+#   };
+# }
 
 # if not run.result or run.result.answer == "":
 #     sleep(10) #I'm assuming its missing due to some timing/finalization of processing, hence the sleep.
 #     run = client.get(run_id=run.run_id)
 
-print(run.result.answer)
+# print(run.result.answer)
